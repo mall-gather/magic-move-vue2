@@ -55,6 +55,12 @@ const routes = [{
     path:'/order',
     name:'order',
     component:()=>import('@/views/order/index.vue'),
+  },
+  // 商品
+  {
+    path:'/goods',
+    name:'goods',
+    component:()=>import('@/views/goods/index.vue'),
   }
 ]
 

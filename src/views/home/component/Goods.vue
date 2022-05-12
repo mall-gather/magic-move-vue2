@@ -75,6 +75,12 @@ export default {
   methods: {
     clickCard (id) {
       console.log(id);
+      this.$router.push({
+        path: '/goods',
+        query: {
+          id
+        }
+      })
     },
     onLoad () {
       // 异步更新数据
