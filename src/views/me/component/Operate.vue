@@ -1,6 +1,6 @@
 <template>
   <div class="operate">
-    <RouterCell title="我的订单" icon="orders-o"></RouterCell>
+    <RouterCell title="我的订单" icon="orders-o" @onCell="onOrder"></RouterCell>
     <RouterCell title="我的优惠券" icon="coupon-o"></RouterCell>
     <RouterCell title="收货地址" icon="location-o"></RouterCell>
     <RouterCell title="联系客服" icon="service-o"></RouterCell>
@@ -13,6 +13,13 @@ import RouterCell from '@/components/RouterCell/index.vue';
 export default {
   components: {
     RouterCell,
+  },
+  methods: {
+    onOrder() {
+      this.$router.push({
+        path:'/order'
+      })
+    }
   },
 }
 </script>

@@ -1,15 +1,16 @@
 <template>
-  <card num="1"
+  <card :num="num"
         :price="price.toFixed(2)"
         :desc="desc"
         :title="title"
-        :thumb="thumb">
-    <template #num>
+        :thumb="thumb"
+        @click="onClickCard">
+    <template v-if="isStepper" #num>
       <stepper :value="value"
                theme="round"
                button-size="24px"
                async-change
-               @change="onChange" />
+               @change="onChangeNum" />
     </template>
   </card>
 </template>
@@ -22,6 +23,10 @@ export default {
     Stepper,
   },
   props: {
+    id: {
+      type: Number,
+      default: null
+    },
     thumb: {
       type: String,
       default: ''
@@ -42,6 +47,10 @@ export default {
       type: Number,
       default: 0
     },
+    isStepper: {
+      type: Boolean,
+      default: true
+    },
   },
   data () {
     return {
@@ -56,7 +65,10 @@ export default {
     }
   },
   methods: {
-    onChange (value) {
+    onClickCard(){
+      this.$emit('onClickCard',this.id)
+    },
+    onChangeNum (value) {
       Toast.loading({ forbidClick: true });
 
       clearTimeout(this.timer);
@@ -75,5 +87,6 @@ export default {
   background-color: #fff;
   flex: 1;
   padding-left: 0;
+  margin-top: 0;
 }
 </style>

@@ -10,11 +10,13 @@
           <div class="item">
             <checkbox :name="item.id">
             </checkbox>
-            <GoodsCardRow :thumb="item.thumb"
+            <GoodsCardRow :id="item.id"
+                          :thumb="item.thumb"
                           :title="item.title"
                           :desc="item.desc"
                           :price="item.price"
-                          :num="item.num"></GoodsCardRow>
+                          :num="item.num"
+                          @onClickCard="onClickCard"></GoodsCardRow>
           </div>
           <template #right>
             <van-button square
@@ -33,7 +35,7 @@
     <div class="show-empty-state"
          v-else>
       <EmptyState class="empty-state"
-                  :image="require('../../../assets/image/1.webp')"
+                  :image="require('@/assets/image/shoppingcartnull.webp')"
                   description="您的购物车空空如也～"></EmptyState>
       <div class="recommend">
         为你推荐
@@ -115,6 +117,10 @@ export default {
           });
           break;
       }
+    },
+    // 点击购物车商品
+    onClickCard(val){
+      console.log(val);
     },
     // 选择列表
     checkListData (result) {

@@ -38,15 +38,23 @@ const routes = [{
       }
     ]
   },
+  // 登录
   {
     path: '/login',
     name: 'login',
     component: () => import('@/views/login/index.vue'),
   },
+  // 注册
   {
     path:'/register',
     name:'register',
     component:()=>import('@/views/register/index.vue'),
+  },
+  // 订单列表
+  {
+    path:'/order',
+    name:'order',
+    component:()=>import('@/views/order/index.vue'),
   }
 ]
 
