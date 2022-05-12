@@ -31,6 +31,7 @@ export default {
 
 <style lang="less" scoped>
 .me {
-  height: 100vh;
+  height: calc(100vh - 50px);
+  overflow: auto;
 }
 </style>

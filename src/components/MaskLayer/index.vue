@@ -1,10 +1,11 @@
 <template>
   <div class="mask-layer">
     <overlay :show="show"
-             @click="show = false">
-      <div class="wrapper"
-           @click.stop>
-        <div class="block" />
+             @click="closureShow">
+      <div class="wrapper">
+        <div class="block" @click.stop>
+          <slot></slot>
+        </div>
       </div>
     </overlay>
   </div>
@@ -22,24 +23,23 @@ export default {
       default: false
     },
   },
+  methods: {
+    closureShow() {
+      console.log('111');
+      this.$emit('update:show',false)
+    }
+  },
 }
 </script>
 
 <style lang="less" scoped>
-.van-overlay {
-  z-index: 9999;
-}
 .wrapper {
   display: flex;
   align-items: center;
   justify-content: center;
   height: 100%;
 }
-
-.block {
-  width: 120px;
-  height: 120px;
-  padding: 20px 25px;
-  background-color: #fff;
+.block{
+  display: block;
 }
 </style>

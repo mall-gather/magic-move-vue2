@@ -3,10 +3,9 @@ import VueRouter from 'vue-router'
 
 Vue.use(VueRouter)
 
-const routes = [
-  {
-    path:'',
-    redirect:'/layout'
+const routes = [{
+    path: '',
+    redirect: '/layout'
   },
   {
     path: '/layout',
@@ -21,11 +20,12 @@ const routes = [
         name: 'home',
         component: () => import('@/views/home/index.vue'),
       },
-      {
-        path: '/categories',
-        name: 'categories',
-        component: () => import('@/views/categories/index.vue'),
-      },
+      // 废弃
+      // {
+      //   path: '/categories',
+      //   name: 'categories',
+      //   component: () => import('@/views/categories/index.vue'),
+      // },
       {
         path: '/shoppingcart',
         name: 'shoppingcart',
@@ -37,6 +37,16 @@ const routes = [
         component: () => import('@/views/me/index.vue'),
       }
     ]
+  },
+  {
+    path: '/login',
+    name: 'login',
+    component: () => import('@/views/login/index.vue'),
+  },
+  {
+    path:'/register',
+    name:'register',
+    component:()=>import('@/views/register/index.vue'),
   }
 ]
 

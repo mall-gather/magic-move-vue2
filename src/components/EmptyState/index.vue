@@ -1,6 +1,6 @@
 <template>
   <div class="empty">
-    <empty image="error" description="描述文字" />
+    <empty :image="image" :description="description" />
   </div>
 </template>
 
@@ -9,6 +9,16 @@ import { Empty } from 'vant';
 export default {
   components: {
     Empty,
+  },
+  props: {
+    image: {
+      type: String,
+      default: 'error'
+    },
+    description: {
+      type: String,
+      default: '描述文字'
+    },
   },
 }
 </script>

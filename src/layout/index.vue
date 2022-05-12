@@ -2,11 +2,12 @@
   <div class="layout">
     <router-view />
     <tabbar @change="tabBar"
+            active-color="#ff6d6d"
             v-model="active">
       <tabbar-item name="home"
                    icon="wap-home-o">首页</tabbar-item>
-      <tabbar-item name="categories"
-                   icon="bookmark-o">分类</tabbar-item>
+      <!-- <tabbar-item name="categories"
+                   icon="bookmark-o">分类</tabbar-item> -->
       <tabbar-item name="shoppingcart"
                    icon="shopping-cart-o">购物车</tabbar-item>
       <tabbar-item name="me"
