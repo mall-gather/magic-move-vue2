@@ -61,7 +61,26 @@ const routes = [{
     path:'/goods',
     name:'goods',
     component:()=>import('@/views/goods/index.vue'),
+  },
+  // 优惠券
+  {
+    path:'/coupon',
+    name:'coupon',
+    component:()=>import('@/views/coupon/index.vue'),
+  },
+  // 收货地址
+  {
+    path:'/address',
+    name:'address',
+    component:()=>import('@/views/address/index.vue'),
+  },
+  // 添加收货地址
+  {
+    path:'/addaddress',
+    name:'addaddress',
+    component:()=>import('@/views/addaddress/index.vue'),
   }
+
 ]
 
 const router = new VueRouter({

@@ -119,8 +119,13 @@ export default {
       }
     },
     // 点击购物车商品
-    onClickCard(val){
-      console.log(val);
+    onClickCard (id) {
+      this.$router.push({
+        path: '/goods',
+        query: {
+          id
+        }
+      })
     },
     // 选择列表
     checkListData (result) {

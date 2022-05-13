@@ -5,7 +5,7 @@
            :key="item.title"
            :title="item.title"
            :name="item.name">
-        <OrderList :active="active"></OrderList>
+        <CouponList :active="active"></CouponList>
       </tab>
     </Tabs>
   </div>
@@ -14,38 +14,34 @@
 <script>
 import { Tab } from 'vant';
 import Tabs from '@/components/Tabs/index.vue';
-import OrderList from './OrderList.vue';
+import CouponList from './CouponList.vue';
 export default {
   components: {
     Tab,
     Tabs,
-    OrderList,
+    CouponList,
   },
   data () {
     return {
       tabList: [
         {
-          title: '全部',
+          title: '待使用',
           name: 0
         },
         {
-          title: '待支付',
+          title: '待生效',
           name: 1
         },
         {
-          title: '待发货',
+          title: '已使用',
           name: 2
         },
         {
-          title: '待收货',
+          title: '已过期',
           name: 3
         },
-        {
-          title: '售后',
-          name: 4
-        }
       ],
-      active:0
+      active: 0
     }
   },
   methods: {
@@ -53,6 +49,7 @@ export default {
       this.active = val
     }
   },
+
 }
 </script>
 

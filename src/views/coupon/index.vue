@@ -1,24 +1,23 @@
 <template>
-  <div class="goods">
+  <div class="coupon">
     <NavBar></NavBar>
-    <GoodsInfo></GoodsInfo>
+    <Content></Content>
   </div>
 </template>
 
 <script>
 import NavBar from './component/NavBar.vue';
-import GoodsInfo from './component/GoodsInfo.vue';
+import Content from './component/Content.vue';
 export default {
   components: {
     NavBar,
-    GoodsInfo,
+    Content,
   },
 }
 </script>
 
 <style lang="less" scoped>
-.goods {
-  height: calc(100vh - 50px);
-  overflow: auto;
+.coupon{
+  height: 100vh;
 }
 </style>

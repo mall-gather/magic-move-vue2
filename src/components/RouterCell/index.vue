@@ -1,5 +1,11 @@
 <template>
-  <cell :title="title" :icon="icon" is-link :clickable="false" @click="onCell" :to="url" size="large"/>
+  <cell :title="title"
+        :icon="icon"
+        :is-link="isLink"
+        :clickable="false"
+        @click="onCell"
+        :to="url"
+        size="large" />
 </template>
 
 <script>
@@ -17,13 +23,17 @@ export default {
       type: String,
       default: ''
     },
-    url:{
+    url: {
       type: String,
-      default:''
+      default: ''
+    },
+    isLink: {
+      type: Boolean,
+      default: true
     }
   },
   methods: {
-    onCell() {
+    onCell () {
       this.$emit('onCell')
     }
   },
@@ -31,5 +41,4 @@ export default {
 </script>
 
 <style>
-
 </style>

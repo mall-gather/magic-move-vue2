@@ -1,10 +1,18 @@
 <template>
   <div class="operate">
-    <RouterCell title="我的订单" icon="orders-o" @onCell="onOrder"></RouterCell>
-    <RouterCell title="我的优惠券" icon="coupon-o"></RouterCell>
-    <RouterCell title="收货地址" icon="location-o"></RouterCell>
-    <RouterCell title="联系客服" icon="service-o"></RouterCell>
-    <RouterCell title="查看《服务条款》" icon="comment-o"></RouterCell>
+    <RouterCell title="我的订单"
+                icon="orders-o"
+                @onCell="onOrder"></RouterCell>
+    <RouterCell title="我的优惠券"
+                icon="coupon-o"
+                @onCell="onCoupon"></RouterCell>
+    <RouterCell title="收货地址"
+                @onCell="onAddress"
+                icon="location-o"></RouterCell>
+    <RouterCell title="联系客服"
+                icon="service-o"></RouterCell>
+    <RouterCell title="查看《服务条款》"
+                icon="comment-o"></RouterCell>
   </div>
 </template>
 
@@ -15,17 +23,27 @@ export default {
     RouterCell,
   },
   methods: {
-    onOrder() {
+    onOrder () {
       this.$router.push({
-        path:'/order'
+        path: '/order'
       })
-    }
+    },
+    onCoupon () {
+      this.$router.push({
+        path: '/coupon'
+      })
+    },
+    onAddress () {
+      this.$router.push({
+        path: '/address'
+      })
+    },
   },
 }
 </script>
 
 <style lang="less" scoped>
-.operate{
+.operate {
   margin: 0 0 10px 0;
 }
 </style>

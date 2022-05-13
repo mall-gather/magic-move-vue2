@@ -1,24 +1,21 @@
 <template>
-  <div class="goods">
+  <div class="address">
     <NavBar></NavBar>
-    <GoodsInfo></GoodsInfo>
+    <AddressList></AddressList>
   </div>
 </template>
 
 <script>
 import NavBar from './component/NavBar.vue';
-import GoodsInfo from './component/GoodsInfo.vue';
+import AddressList from './component/AddressList.vue';
 export default {
   components: {
     NavBar,
-    GoodsInfo,
+    AddressList,
   },
 }
 </script>
 
 <style lang="less" scoped>
-.goods {
-  height: calc(100vh - 50px);
-  overflow: auto;
-}
+
 </style>
