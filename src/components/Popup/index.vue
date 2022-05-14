@@ -1,6 +1,8 @@
 <template>
   <popup v-model="show"
          round
+         :closeable="closeable"
+         @closed="onClosed"
          position="bottom">
          <slot></slot>
   </popup>
@@ -17,6 +19,10 @@ export default {
       type: Boolean,
       default: false
     },
+    closeable:{
+      type:Boolean,
+      default:false
+    }
   },
   data () {
     return {
@@ -36,6 +42,9 @@ export default {
     }
   },
   methods: {
+    onClosed(){
+      this.$emit('onClosed')
+    },
   },
 }
 </script>

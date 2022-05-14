@@ -9,6 +9,9 @@
     <template #label>
       <slot name="label"></slot>
     </template>
+     <template #extra>
+      <slot name="extra"></slot>
+    </template>
   </cell>
 </template>
 

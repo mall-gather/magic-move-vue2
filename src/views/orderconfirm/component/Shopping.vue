@@ -32,6 +32,7 @@
         <div class="subtotal">
           <div class="null"></div>
           <div>
+            <span>小计</span>
             <span>￥</span>
             <span>{{subtotal(price, freight, ((coupons[chosenCoupon]?coupons[chosenCoupon].value:0 )/ 100))}}</span>
           </div>
@@ -114,6 +115,7 @@ export default {
     // 小计
     subtotal (price, freight, coupon) {
       this.priceTotal = price + freight - coupon
+      this.$emit('subtotal',this.priceTotal)
       return this.priceTotal
     }
   },
