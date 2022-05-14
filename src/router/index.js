@@ -79,7 +79,19 @@ const routes = [{
     path:'/addaddress',
     name:'addaddress',
     component:()=>import('@/views/addaddress/index.vue'),
-  }
+  },
+  // 编辑收货地址
+  {
+    path:'/editaddress',
+    name:'editaddress',
+    component:()=>import('@/views/editaddress/index.vue'),
+  },
+  // 提交订单
+  {
+    path:'/orderconfirm',
+    name:'orderconfirm',
+    component:()=>import('@/views/orderconfirm/index.vue'),
+  },
 
 ]
 

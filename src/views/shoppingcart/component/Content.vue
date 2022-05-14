@@ -86,7 +86,6 @@ export default {
     shoppingCart: {
       immediate: true,
       handler (val) {
-        console.log(val.length);
         if (val.length > 0) {
           this.isEmptyState = false
         } else {
@@ -150,7 +149,9 @@ export default {
     },
     // 提交
     onSubmit () {
-
+      this.$router.push({
+        path:'/orderconfirm'
+      })
     }
   },
 }

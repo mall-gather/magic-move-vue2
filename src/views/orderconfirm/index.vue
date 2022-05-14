@@ -1,23 +1,23 @@
 <template>
-  <div class="add-address">
+  <div class="order-confirm">
     <NavBar></NavBar>
-    <AddressEdit></AddressEdit>
+    <Content></Content>
   </div>
 </template>
 
 <script>
 import NavBar from './component/NavBar.vue';
-import AddressEdit from './component/AddressEdit.vue';
+import Content from './component/Content.vue';
 export default {
   components: {
     NavBar,
-    AddressEdit,
+    Content,
   },
 }
 </script>
 
 <style lang="less" scoped>
-.add-address{
-  height: 100vh;
+.order-confirm{
+  height: calc(100vh - 50px);
 }
 </style>

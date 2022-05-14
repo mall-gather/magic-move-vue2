@@ -3,7 +3,7 @@
               :disabled="isOnSubmit"
               button-text="提交订单"
               @submit="onSubmit">
-    <checkbox v-model="checked"
+    <checkbox v-if="isCheckboxShow" v-model="checked"
               @change="onChange">全选</checkbox>
   </submit-bar>
 </template>
@@ -27,6 +27,10 @@ export default {
     isCheckedAll: {
       type: Boolean,
       default: false
+    },
+    isCheckboxShow:{
+      type: Boolean,
+      default: true
     }
   },
   data () {
@@ -37,6 +41,7 @@ export default {
   },
   watch: {
     resultLength: {
+      immediate:true,
       handler (val) {
         if (val > 0) {
           this.isOnSubmit = false

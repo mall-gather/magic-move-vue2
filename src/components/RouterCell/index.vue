@@ -5,7 +5,11 @@
         :clickable="false"
         @click="onCell"
         :to="url"
-        size="large" />
+        size="large">
+    <template #label>
+      <slot name="label"></slot>
+    </template>
+  </cell>
 </template>
 
 <script>
