@@ -98,6 +98,12 @@ const routes = [{
     name:'orderconfirm',
     component:()=>import('@/views/orderconfirm/index.vue'),
   },
+  // 联系客服
+  {
+    path:'/service',
+    name:'service',
+    component:()=>import('@/views/service/index.vue'),
+  },
 
 ]
 

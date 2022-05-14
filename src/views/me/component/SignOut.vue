@@ -1,6 +1,6 @@
 <template>
   <div class="sign-out">
-    <cell value="退出登录" size="large" />
+    <cell value="退出登录" @click="onSignOut" size="large" />
   </div>
 </template>
 
@@ -9,6 +9,11 @@ import { Cell } from 'vant';
 export default {
   components: {
     Cell,
+  },
+  methods: {
+    onSignOut() {
+      console.log('退出登录');
+    }
   },
 }
 </script>

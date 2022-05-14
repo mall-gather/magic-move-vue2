@@ -10,6 +10,7 @@
                 @onCell="onAddress"
                 icon="location-o"></RouterCell>
     <RouterCell title="联系客服"
+                @onCell="onService"
                 icon="service-o"></RouterCell>
     <RouterCell title="查看《服务条款》"
                 icon="comment-o"></RouterCell>
@@ -36,6 +37,11 @@ export default {
     onAddress () {
       this.$router.push({
         path: '/address'
+      })
+    },
+    onService () {
+      this.$router.push({
+        path: '/service'
       })
     },
   },
