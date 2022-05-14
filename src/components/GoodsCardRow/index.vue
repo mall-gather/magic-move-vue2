@@ -12,6 +12,9 @@
                async-change
                @change="onChangeNum" />
     </template>
+    <template #footer>
+      <slot name="footer"></slot>
+    </template>
   </card>
 </template>
 

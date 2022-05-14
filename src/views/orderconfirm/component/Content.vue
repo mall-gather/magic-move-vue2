@@ -53,9 +53,9 @@
                     format="mm:ss" />
       </div>
       <div class="plat">
-        <Plat></Plat>
+        <Plat @onChangeRadio="onChangeRadioPlat"></Plat>
       </div>
-      <van-button type="primary" round block>确认支付</van-button>
+      <van-button type="primary" @click="onClickPayment" round block>确认支付</van-button>
     </Popup>
   </div>
 </template>
@@ -150,6 +150,13 @@ export default {
     },
     onClosedConfirm () {
 
+    },
+    onChangeRadioPlat(val){
+      console.log(val);
+    },
+    // 付款
+    onClickPayment(){
+      console.log('付款');
     }
   },
 }
@@ -228,6 +235,7 @@ export default {
   }
   .plat{
     text-align: left;
+    margin: 20px 0 0 0;
   }
 }
 </style>

@@ -56,6 +56,12 @@ const routes = [{
     name:'order',
     component:()=>import('@/views/order/index.vue'),
   },
+  // 订单详情
+  {
+    path:'/orderdetails',
+    name:'orderdetails',
+    component:()=>import('@/views/orderdetails/index.vue'),
+  },
   // 商品
   {
     path:'/goods',
