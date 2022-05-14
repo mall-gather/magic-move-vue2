@@ -30,9 +30,10 @@
 </template>
 
 <script>
-import { Form as VanForm, Field as VanField, Button as VanButton, Dialog } from 'vant';
+import { Form as VanForm, Field as VanField, Button as VanButton, Dialog, Notify } from 'vant';
 import VerificationCode from '@/components/VerificationCode/index.vue';
 import MaskLayer from '@/components/MaskLayer/index.vue';
+import { login } from '@/api/me';
 export default {
   components: {
     VanForm,
@@ -51,14 +52,28 @@ export default {
     };
   },
   methods: {
-    register(){
+    register () {
       this.$router.push({
-        path:'/register'
+        path: '/register'
       })
     },
     onSubmit (values) {
-      console.log('submit', values);
       this.show = true
+      // 
+      login({ account: this.telephone, password: this.password }).then(res => {
+        console.log(res);
+        if (res.data.code === 200) {
+          this.$store.dispatch('token', res.data.token)
+          this.$store.dispatch('userInfo', res.data.data)
+          this.$router.push({
+            path: '/me'
+          })
+          Notify({ type: 'success', message: '登录成功', duration: 1000, });
+        }
+      }).catch(err => {
+        console.log(err);
+        Notify({ type: 'warning', message: '手机号或密码不正确', duration: 1000, });
+      })
     },
   },
 }

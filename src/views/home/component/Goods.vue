@@ -6,10 +6,10 @@
     <div class="goods">
       <GoodsCard v-for="(item,index) in cardList"
                  :key="index"
-                 :img="item.img"
-                 :title="item.title"
-                 :pic="item.pic"
-                 @clickCard="clickCard(item.id)"></GoodsCard>
+                 :img="item.goods_avatar"
+                 :title="item.goods_name"
+                 :pic="item.goods_price"
+                 @clickCard="clickCard(item.goods_id)"></GoodsCard>
     </div>
   </list>
 </template>
@@ -17,6 +17,7 @@
 <script>
 import { List } from 'vant';
 import GoodsCard from '@/components/GoodsCard/index.vue';
+import { getGoodsList } from '@/api/home';
 export default {
   components: {
     GoodsCard,
@@ -26,6 +27,9 @@ export default {
     return {
       loading: false,
       finished: false,
+      currentPage: 1,
+      pageSize: 20,
+      frequency: 1,
       cardList: [
         {
           id: 1,
@@ -72,7 +76,16 @@ export default {
       ]
     }
   },
+  created () {
+    // this.getGoodsLists()
+  },
   methods: {
+    // 获取数据
+    // getGoodsLists () {
+    //   getGoodsList(1, 5).then(res => {
+    //     console.log(res);
+    //   })
+    // },
     clickCard (id) {
       console.log(id);
       this.$router.push({
@@ -85,19 +98,28 @@ export default {
     onLoad () {
       // 异步更新数据
       // setTimeout 仅做示例，真实场景中一般为 ajax 请求
-      setTimeout(() => {
-        for (let i = 0; i < 10; i++) {
-          this.cardList.push(this.cardList[i]);
-        }
+      getGoodsList(this.currentPage, this.pageSize * this.frequency).then(res => {
+        console.log(res);
+        this.cardList = res.data.data
 
         // 加载状态结束
         this.loading = false;
-
         // 数据全部加载完成
-        if (this.cardList.length >= 40) {
-          this.finished = true;
-        }
-      }, 1000);
+        this.finished = true;
+        this.frequency = this.frequency++
+      })
+      // setTimeout(() => {
+      //   for (let i = 0; i < 10; i++) {
+      //     this.cardList.push(this.cardList[i]);
+      //   }
+
+
+
+      //   // 数据全部加载完成
+      //   if (this.cardList.length >= 20) {
+      //     this.finished = true;
+      //   }
+      // }, 1000);
     },
   },
 }

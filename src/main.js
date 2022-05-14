@@ -12,3 +12,22 @@ new Vue({
   store,
   render: h => h(App)
 }).$mount('#app')
+
+// 路由拦截
+router.beforeEach((to, from, next) => {
+  let token = store.state.token
+  if (to.meta.requiresAuth) {
+    if (token) {
+      next()
+    } else {
+      next({
+        path: '/login',
+        query: {
+          redirect: to.fullPath
+        }
+      })
+    }
+  } else {
+      next()
+    }
+})
