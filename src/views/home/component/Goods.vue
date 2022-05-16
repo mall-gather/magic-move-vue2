@@ -17,7 +17,7 @@
 <script>
 import { List } from 'vant';
 import GoodsCard from '@/components/GoodsCard/index.vue';
-import { getGoodsList } from '@/api/home';
+import { getGoodsList } from '@/api/goods';
 export default {
   components: {
     GoodsCard,
@@ -76,18 +76,8 @@ export default {
       ]
     }
   },
-  created () {
-    // this.getGoodsLists()
-  },
   methods: {
-    // 获取数据
-    // getGoodsLists () {
-    //   getGoodsList(1, 5).then(res => {
-    //     console.log(res);
-    //   })
-    // },
     clickCard (id) {
-      console.log(id);
       this.$router.push({
         path: '/goods',
         query: {

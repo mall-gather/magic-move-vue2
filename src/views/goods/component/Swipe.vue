@@ -20,14 +20,15 @@ export default {
     SwipeItem,
     [ImagePreview.Component.name]: ImagePreview.Component,
   },
+  props: {
+    goods_carousel: {
+      type: Array,
+      default: ()=>[]
+    },
+  },
   data () {
     return {
       current: 0,
-      goods_carousel: [
-        require('../../../assets/image/goods/1.jpeg'),
-        require('../../../assets/image/goods/1.jpeg'),
-        require('../../../assets/image/goods/1.jpeg'),
-      ]
     };
   },
   methods: {

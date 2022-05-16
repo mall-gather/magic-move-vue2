@@ -60,7 +60,11 @@ export default {
     onSubmit (values) {
       this.show = true
       // 
-      login({ account: this.telephone, password: this.password }).then(res => {
+      const data = {
+        telephone: this.telephone,
+        password: this.password
+      }
+      login(data).then(res => {
         console.log(res);
         if (res.data.code === 200) {
           this.$store.dispatch('token', res.data.token)

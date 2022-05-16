@@ -3,10 +3,10 @@
     <van-image round
                width="5rem"
                height="5rem"
-               src="https://img01.yzcdn.cn/vant/cat.jpeg" />
+               :src="$store.state.userInfo.u_avatar" />
     <div class="content">
-      <div class="user">xianyu</div>
-      <div class="user-id">123</div>
+      <div class="user">{{$store.state.userInfo.u_name}}</div>
+      <div class="user-id">{{$store.state.userInfo.u_phone}}</div>
     </div>
   </div>
 </template>

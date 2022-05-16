@@ -8,7 +8,8 @@ Vue.use(Vuex)
 export default new Vuex.Store({
   state: {
     userInfo: {},
-    token: ''
+    token: '',
+    orderConfirm: [],
   },
   mutations: {
     userInfo(state, payload) {
@@ -20,7 +21,12 @@ export default new Vuex.Store({
     removeData(state) {
       state.userInfo = {}
       state.token = ''
-    }
+    },
+    orderConfirm(state, payload) {
+      payload.forEach(element => {
+        state.orderConfirm.push(element)
+      });
+    },
   },
   actions: {
     userInfo(context, products) {
@@ -32,6 +38,18 @@ export default new Vuex.Store({
     removeData(context) {
       context.commit('removeData')
     },
+    orderConfirm(context, products) {
+      context.state.orderConfirm = []
+      context.commit('orderConfirm', products)
+    },
+  },
+  getters: {
+    orderConfirm: state => {
+      return state.orderConfirm;
+    },
+    userInfo: state => {
+      return state.userInfo;
+    }
   },
   modules: {},
   plugins: [persistedState({

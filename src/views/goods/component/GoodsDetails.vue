@@ -2,7 +2,7 @@
   <div class="goods-details">
     <RouterCell title="商品详情"
                 :isLink="false"></RouterCell>
-    <van-image v-for="(item,index) in detailsList"
+    <van-image v-for="(item,index) in goods_details"
                :key="index"
                @click="onClickImage(index)"
                width="100%"
@@ -20,19 +20,16 @@ export default {
     RouterCell,
     VanImage,
   },
-  data () {
-    return {
-      detailsList: [
-        'https://img01.yzcdn.cn/vant/cat.jpeg',
-        'https://img01.yzcdn.cn/vant/apple-1.jpg',
-        'https://img01.yzcdn.cn/vant/apple-2.jpg',
-      ]
-    }
+  props: {
+    goods_details: {
+      type: Array,
+      default: ()=>[]
+    },
   },
   methods: {
     onClickImage (index) {
       ImagePreview({
-        images: this.detailsList,
+        images: this.goods_details,
         startPosition: index,
         closeable: true,
       });

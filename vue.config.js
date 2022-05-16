@@ -14,6 +14,7 @@ module.exports = {
       .set('layout', resolve('src/layout'))
       .set('api', resolve('src/api'))
       .set('utils', resolve('src/utils'))
+      .set('mixin', resolve('src/mixin'))
   },
   css: {
     loaderOptions: {

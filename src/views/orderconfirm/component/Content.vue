@@ -5,25 +5,28 @@
                 icon="location-o"
                 @onCell="onCellAddress"></RouterCell>
     <RouterCell v-else
-                :title="list[0].address"
+                :title="list[addressIndex].address"
                 icon="location-o"
                 @onCell="onCellAddress">
-      <template #label>
-        {{list[0].name}} {{list[0].tel}}
+      <template v-if="list.length !== 0"
+                #label>
+        {{list[addressIndex].name}} {{list[addressIndex].tel}}
       </template>
     </RouterCell>
     <Popup :isPopup.sync="isPopup">
       <template>
-        <AddressList :list="list"
+        <AddressList v-if="list.length"
+                     :list="list"
                      :switchable="true"
-                     addressId="1"
+                     :addressId="addressId"
                      @onAdd="onAddAddress"
                      @onEdit="onEditAddress"
                      @onclickItem="onclickItemAddress"></AddressList>
       </template>
     </Popup>
-    <!--  -->
-    <Shopping :shopping="shopping"
+    <!-- 商品 -->
+    <Shopping v-if="shopping.length"
+              :shopping="shopping"
               @subtotal="subtotal"></Shopping>
     <!-- 备注 -->
     <field v-model="message"
@@ -42,10 +45,11 @@
            :closeable="true"
            :isPopup.sync="isPopupConfirm"
            @onClosed="onClosedConfirm">
-      <div class="name">【原神】Q版表情包系列 珠光工艺徽章 Genshin Genshin</div>
+      <div v-if="shopping.length>0"
+           class="name">{{shopping.length>1?'magic商城':shopping[0].title}}</div>
       <div class="amount">
         <span>￥</span>
-        <span class="pic">19.00</span>
+        <span class="pic">{{priceTotal.toFixed(2)}}</span>
       </div>
       <div class="remain-time">
         <span>剩余支付时间：</span>
@@ -55,7 +59,10 @@
       <div class="plat">
         <Plat @onChangeRadio="onChangeRadioPlat"></Plat>
       </div>
-      <van-button type="primary" @click="onClickPayment" round block>确认支付</van-button>
+      <van-button type="primary"
+                  @click="onClickPayment"
+                  round
+                  block>确认支付</van-button>
     </Popup>
   </div>
 </template>
@@ -68,6 +75,9 @@ import AddressList from '@/components/AddressList/index.vue';
 import SubmitBar from '@/components/SubmitBar/index.vue';
 import Shopping from './Shopping.vue';
 import Plat from './Plat.vue';
+import { areaCodeToChinese } from '@/utils/areaCode';
+import { getGoods, getSpecification } from '@/api/goods';
+import { getAddress } from '@/api/address';
 export default {
   components: {
     RouterCell,
@@ -86,40 +96,91 @@ export default {
       isPopupConfirm: false,
       isCheckboxShow: false,
       shopping: [
-        {
-          id: 1,
-          thumb: 'https://img01.yzcdn.cn/vant/ipad.jpeg',
-          title: '手机',
-          desc: '12+256',
-          price: 1000.22,
-          freight: 0,
-          num: 1
-        },
-        {
-          id: 2,
-          thumb: 'https://img01.yzcdn.cn/vant/ipad.jpeg',
-          title: '手机',
-          desc: '12+256',
-          price: 1000.22,
-          freight: 0,
-          num: 1
-        }
+        // {
+        //   id: 1,
+        //   thumb: 'https://img01.yzcdn.cn/vant/ipad.jpeg',
+        //   title: '手机',
+        //   desc: '12+256',
+        //   price: 1000.22,
+        //   freight: 0,
+        //   num: 1
+        // },
+        // {
+        //   id: 2,
+        //   thumb: 'https://img01.yzcdn.cn/vant/ipad.jpeg',
+        //   title: '手机',
+        //   desc: '12+256',
+        //   price: 1000.22,
+        //   freight: 0,
+        //   num: 1
+        // }
       ],
       message: '',
       priceTotal: 0,
-      list: [
-        {
-          id: '1',
-          name: '张三',
-          tel: '13000000000',
-          address: '浙江省杭州市西湖区文三路 138 号东方通信大厦 7 楼 501 室',
-          isDefault: true,
-        },
-      ],
+      list: [],
+      addressIndex: null,
+      addressId: null,
       time: 30 * 60 * 1000,
     }
   },
+  created () {
+    this.getGoodsData()
+    this.getAddressData()
+  },
   methods: {
+    // 获取商品数据
+    getGoodsData () {
+      // 初始化
+      this.shopping = []
+      this.$store.getters.orderConfirm.forEach(element => {
+        getGoods(element.goodsId).then((res) => {
+          console.log(res);
+          getSpecification(element.selectedSkuComb.id).then(result => {
+            console.log(result);
+            this.shopping.push({
+              id: res.data.data.goods_id,
+              thumb: res.data.data.goods_avatar,
+              title: res.data.data.goods_name,
+              specification_id: element.selectedSkuComb.id,
+              desc: result.data.data.specification_value1 + ',' + result.data.data.specification_value2,
+              price: result.data.data.goods_pic,
+              freight: 0,
+              num: element.selectedNum
+            })
+          })
+        }).catch((err) => {
+          console.log(err);
+        });
+      });
+    },
+    // 获取收货地址
+    getAddressData () {
+      this.list = []
+      const u_id = this.$store.getters.userInfo.u_id
+      getAddress(u_id).then(res => {
+        console.log(res);
+        res.data.data.forEach((item, index) => {
+          if (item.isDefault) {
+            this.addressIndex = index
+            this.addressId = item.address_id
+          }
+          this.list.push({
+            id: item.address_id,
+            name: item.consignee,
+            tel: item.telephone,
+            address: areaCodeToChinese([item.province, item.city, item.district]) + ' ' + item.detail,
+            province: item.province,
+            city: item.city,
+            district: item.district,
+            detail: item.detail,
+            zipcode: item.zipcode,
+            isDefault: item.isDefault,
+          })
+        })
+      }).catch(err => {
+        console.log(err);
+      })
+    },
     onCellAddress () {
       this.isPopup = true
     },
@@ -132,13 +193,15 @@ export default {
       this.$router.push({
         path: '/editaddress',
         query: {
-          index
+          id:item.id
         }
       })
     },
     // 选择的地址
     onclickItemAddress (item, index) {
-      console.log(item, index);
+      this.addressIndex = index
+      this.addressId = item.id
+      this.isPopup = false
     },
     // 小计
     subtotal (val) {
@@ -147,15 +210,16 @@ export default {
     // 提交订单
     onSubmitOrderConfirm () {
       this.isPopupConfirm = true
+      console.log('创建订单');
     },
     onClosedConfirm () {
-
+      console.log('关闭');
     },
-    onChangeRadioPlat(val){
+    onChangeRadioPlat (val) {
       console.log(val);
     },
     // 付款
-    onClickPayment(){
+    onClickPayment () {
       console.log('付款');
     }
   },
@@ -223,7 +287,7 @@ export default {
       color: #999;
     }
   }
-  .van-button{
+  .van-button {
     position: fixed;
     bottom: 0;
     left: 0;
@@ -233,7 +297,7 @@ export default {
     background-color: #ff6d6d;
     border: 1px solid #ff6d6d;
   }
-  .plat{
+  .plat {
     text-align: left;
     margin: 20px 0 0 0;
   }

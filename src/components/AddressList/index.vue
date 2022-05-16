@@ -33,7 +33,7 @@ export default {
       default: false
     },
     addressId: {
-      type: String || Number,
+      type: String | Number,
       default: null
     }
   },
@@ -57,6 +57,7 @@ export default {
     addressId: {
       immediate: true,
       handler (val) {
+        console.log(val);
         this.chosenAddressId = val
       }
     }
