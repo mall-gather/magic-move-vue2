@@ -25,7 +25,7 @@
       </template>
     </Popup>
     <!-- 商品 -->
-    <Shopping v-if="shopping.length"
+    <Shopping v-if="this.$store.getters.orderConfirm.length == shopping.length"
               :shopping="shopping"
               @subtotal="subtotal"></Shopping>
     <!-- 备注 -->
@@ -134,7 +134,6 @@ export default {
       this.shopping = []
       this.$store.getters.orderConfirm.forEach(element => {
         getGoods(element.goodsId).then((res) => {
-          console.log(res);
           getSpecification(element.selectedSkuComb.id).then(result => {
             console.log(result);
             this.shopping.push({

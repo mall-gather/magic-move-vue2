@@ -5,12 +5,15 @@
         :title="title"
         :thumb="thumb"
         @click="onClickCard">
-    <template v-if="isStepper" #num>
-      <stepper :value="value"
-               theme="round"
-               button-size="24px"
-               async-change
-               @change="onChangeNum" />
+    <template v-if="isStepper"
+              #num>
+      <div @click.stop>
+        <stepper :value="value"
+                 theme="round"
+                 button-size="24px"
+                 async-change
+                 @change="onChangeNum" />
+      </div>
     </template>
     <template #footer>
       <slot name="footer"></slot>
@@ -62,24 +65,20 @@ export default {
   },
   watch: {
     num: {
+      immediate: true,
       handler (val) {
         this.value = val
       }
     }
   },
   methods: {
-    onClickCard(){
-      this.$emit('onClickCard',this.id)
+    onClickCard () {
+      this.$emit('onClickCard', this.id)
     },
     onChangeNum (value) {
-      Toast.loading({ forbidClick: true });
-
-      clearTimeout(this.timer);
-      this.timer = setTimeout(() => {
-        Toast.clear();
-        // 注意此时修改 value 后会再次触发 change 事件
-        this.value = value;
-      }, 500);
+      
+      this.value = value;
+      this.$emit('onChangeNum',value,this.id)
     },
   },
 }

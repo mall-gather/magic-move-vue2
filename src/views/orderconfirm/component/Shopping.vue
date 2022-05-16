@@ -1,8 +1,8 @@
 <template>
   <div class="shopping">
     <div class="goods">
-      <GoodsCardRow v-for="item in shopping"
-                    :key="item.id"
+      <GoodsCardRow v-for="(item,index) in shopping"
+                    :key="index"
                     :thumb="item.thumb"
                     :title="item.title"
                     :desc="item.desc"
@@ -101,21 +101,21 @@ export default {
       this.chosenCoupon = index;
     },
     onExchange (code) {
-      this.coupons.push(coupon);
+      this.coupons.push(code);
     },
     // 选择列表
     shoppingListData () {
       this.price = 0
       this.freight = 0
       this.shopping.forEach(item => {
-        this.price += item.price
+        this.price += (item.price * item.num)
         this.freight += item.freight
       })
     },
     // 小计
     subtotal (price, freight, coupon) {
       this.priceTotal = price + freight - coupon
-      this.$emit('subtotal',this.priceTotal)
+      this.$emit('subtotal', this.priceTotal)
       return this.priceTotal
     }
   },

@@ -11,7 +11,8 @@
 </template>
 
 <script>
-import { Sku } from 'vant';
+import { Sku, Toast } from 'vant';
+import { addCart } from '@/api/cart';
 export default {
   components: {
     Sku,
@@ -178,6 +179,21 @@ export default {
     onAddCartClicked (skuData) {
       console.log('添加购物车');
       console.log(skuData);
+      const data = {
+        u_id: this.$store.getters.userInfo.u_id,
+        goods_id: skuData.goodsId,
+        specification_id:skuData.selectedSkuComb.id,
+        goods_avatar: this.goodsData.goods_avatar,
+        number: skuData.selectedNum,
+      }
+      addCart(data).then((res) => {
+        if (res.data.code === 200) {
+          this.show = false
+          Toast('添加购物车成功！');
+        }
+      }).catch((err) => {
+        console.log(err);
+      });
     },
     onCloseSku () {
       console.log('关闭');
