@@ -3,10 +3,10 @@
     <van-image round
                width="5rem"
                height="5rem"
-               :src="$store.state.userInfo.u_avatar" />
+               :src="$store.getters.userInfo.u_avatar" />
     <div class="content">
-      <div class="user">{{$store.state.userInfo.u_name}}</div>
-      <div class="user-id">{{$store.state.userInfo.u_phone}}</div>
+      <div class="user">{{$store.getters.userInfo.u_name}}</div>
+      <div class="user-id">{{$store.getters.userInfo.u_phone}}</div>
     </div>
   </div>
 </template>

@@ -103,7 +103,7 @@ export default {
   watch: {
     show: {
       handler (val) {
-        this.$emit('update:isShowSku', val)
+        this.$emit('updateShowSku', val)
       }
     },
     isShowSku: {

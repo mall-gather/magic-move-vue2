@@ -3,27 +3,41 @@
     <pull-refresh v-model="isLoading"
                   success-text="刷新成功"
                   @refresh="onRefresh">
-      <div v-if="!isEmptyState">
-        <GoodsCardRow v-for="item in orderList"
-                      :key="item.id"
-                      :id="item.id"
-                      :thumb="item.thumb"
-                      :title="item.title"
-                      :desc="item.desc"
-                      :price="item.price"
-                      :num="item.num"
-                      :isStepper="false"
-                      @onClickCard="onClickCard">
-          <template #footer>
-            <div @click.stop>
-              <van-button round
-                          type="info"
-                          :loading="isButtonLoading"
-                          @click="onClickButton"
-                          size="small">付款</van-button>
-            </div>
-          </template>
-        </GoodsCardRow>
+      <div v-if="!isEmptyState"
+           class="state">
+        <div class="order-data-list"
+             v-for="(order,o) in orderList"
+             :key="o">
+          <div class="order-title">
+            <span>
+              {{order.date}}
+            </span>
+            <span class="state">
+              {{order.order_status | orderState}}
+            </span>
+          </div>
+          <GoodsCardRow v-for="(item,index) in order.orderGoods"
+                        :key="index"
+                        :id="item.id"
+                        :thumb="item.thumb"
+                        :title="item.title"
+                        :desc="item.desc"
+                        :price="item.price"
+                        :num="item.num"
+                        :isStepper="false"
+                        @onClickCard="onClickCard">
+          </GoodsCardRow>
+          <div class="payment">
+            <van-button round
+                        v-if="order.order_status === 1"
+                        class="payment-btn"
+                        type="info"
+                        :loading="isButtonLoading"
+                        @click="onClickButton(order)"
+                        size="small">付款</van-button>
+
+          </div>
+        </div>
       </div>
       <div v-else
            class="empty-state">
@@ -32,17 +46,18 @@
       </div>
     </pull-refresh>
     <Popup class="popup-confirm"
+           v-if="orderList.length"
            :closeable="true"
            :isPopup.sync="isPopupConfirm"
            @onClosed="onClosedConfirm">
-      <div class="name">【原神】Q版表情包系列 珠光工艺徽章 Genshin Genshin</div>
+      <div class="name">{{pay.name}}</div>
       <div class="amount">
         <span>￥</span>
-        <span class="pic">19.00</span>
+        <span class="pic">{{pay.price}}</span>
       </div>
       <div class="remain-time">
         <span>剩余支付时间：</span>
-        <count-down :time="time"
+        <count-down :time="pay.time"
                     format="mm:ss" />
       </div>
       <div class="plat">
@@ -57,12 +72,14 @@
 </template>
 
 <script>
-import { PullRefresh,CountDown, Button as VanButton } from 'vant';
+import { PullRefresh, CountDown, Button as VanButton } from 'vant';
 import GoodsCardRow from '@/components/GoodsCardRow/index.vue';
 import EmptyState from '@/components/EmptyState/index.vue';
 import Plat from './Plat.vue';
 import Popup from '@/components/Popup/index.vue';
 import _ from 'lodash';
+import { convertTime, countdown } from '@/utils/time';
+import { getUserOrderList } from '@/api/order';
 export default {
   components: {
     GoodsCardRow,
@@ -85,16 +102,8 @@ export default {
       isButtonLoading: false,
       isPopupConfirm: false,
       isEmptyState: false,
-      orderList: [
-        {
-          id: 1,
-          thumb: 'https://img01.yzcdn.cn/vant/ipad.jpeg',
-          title: '手机',
-          desc: '12+256',
-          price: 1000.22,
-          num: 1
-        }
-      ],
+      orderList: [],
+      pay: {},
       time: 30 * 60 * 1000,
     }
   },
@@ -108,7 +117,6 @@ export default {
     orderList: {
       immediate: true,
       handler (val) {
-        console.log(val.length);
         if (val.length > 0) {
           this.isEmptyState = false
         } else {
@@ -117,7 +125,61 @@ export default {
       }
     }
   },
+  filters: {
+    orderState: function (value) {
+      switch (value) {
+        case 1:
+          return '待付款'
+        case 2:
+          return '已付款'
+        case 3:
+          return '已发货'
+        case 4:
+          return '已完成'
+        case -1:
+          return '已关闭'
+      }
+    }
+  },
+  created () {
+    this.getUserOrderListData()
+  },
   methods: {
+    // 获取数据
+    getUserOrderListData () {
+      const data = {
+        u_id: this.$store.getters.userInfo.u_id,
+        order_status: this.active
+      }
+      getUserOrderList(data).then(res => {
+        console.log(res)
+        if (res.data.code === 200) {
+          res.data.data.forEach(item => {
+            let orderTemp = []
+            item.ordergoods.forEach(item2 => {
+              orderTemp.push({
+                id: item2.order_id,
+                thumb: item2.goods_avatar,
+                title: item2.goods_name,
+                desc: item2.specification.specification_value1 + ' ' + item2.specification.specification_value2,
+                price: item2.goods_pic,
+                num: item2.goods_num
+              })
+            })
+            this.orderList.push({
+              order_id: item.order_id,
+              order_status: item.order_status,
+              date: convertTime('yyyy-MM-dd', item.create_time),
+              create_time: item.create_time,
+              end_time: item.end_time,
+              orderGoods: orderTemp
+            })
+          });
+        }
+      }).catch(err => {
+        console.log(err)
+      })
+    },
     // 刷新
     onRefresh () {
       setTimeout(() => {
@@ -135,8 +197,18 @@ export default {
       })
     },
     //
-    onClickButton () {
+    onClickButton (order) {
       this.isPopupConfirm = true
+      console.log(order);
+      let price = 0
+      order.orderGoods.forEach(item => {
+        price += (item.price * item.num)
+      })
+      this.pay = {
+        name: order.orderGoods.length > 1 ? 'magic商城' : order.orderGoods[0].title,
+        time: countdown(order.end_time),
+        price: price
+      }
     },
     onClosedConfirm () {
 
@@ -156,7 +228,27 @@ export default {
 .order-list {
   height: 100%;
   .van-pull-refresh {
-    height: 100%;
+    height: calc(100vh - 90px);
+    overflow: auto;
+    .order-data-list {
+      padding: 10px;
+      margin: 0 0 10px 0;
+      background-color: #fff;
+      .order-title {
+        padding: 0 0 10px 0;
+        font-size: 18px;
+        font-weight: 600;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        >.state{
+          font-size: 16px;
+          font-weight: 500;
+          color: #ff6d6d;
+          margin: 0 10px 0 0;
+        }
+      }
+    }
     .empty-state {
       padding: 60px 0 30px 0;
     }
@@ -167,6 +259,14 @@ export default {
     background-color: #fff;
     padding: 0 20px;
     margin: 10px 0 0 0;
+  }
+  .payment {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    .payment-btn {
+      margin: 0 10px 0 0;
+    }
   }
 
   .popup-confirm {

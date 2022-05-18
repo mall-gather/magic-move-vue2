@@ -5,7 +5,7 @@
                        @click="onClickService" />
     <goods-action-icon icon="cart-o"
                        text="购物车"
-                       badge="5"
+                       :badge="cartNUmber"
                        @click="onClickShoppingCart" />
     <goods-action-button type="warning"
                          text="加入购物车"
@@ -24,17 +24,27 @@ export default {
     GoodsActionIcon,
     GoodsActionButton,
   },
+  props: {
+    cartNUmber: {
+      type: Number,
+      default: 0
+    },
+  },
+  data () {
+    return {
+    }
+  },
   methods: {
     onClickService () {
-      
+
     },
     onClickShoppingCart () {
       this.$router.push({
-        path:'/shoppingcart'
+        path: '/shoppingcart'
       })
     },
     onClickButton () {
-      this.$emit('onClickButton',true)
+      this.$emit('onClickButton', true)
     },
   },
 }

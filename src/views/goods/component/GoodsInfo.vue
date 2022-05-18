@@ -6,11 +6,12 @@
     <RouterCell class="choose-goods"
                 title="请选择商品款式"
                 @onCell="onCellSku"></RouterCell>
-    <Sku :isShowSku.sync="isShowSku"
+    <Sku :isShowSku="isShowSku"
+    @updateShowSku="updateShowSku"
          v-if="JSON.stringify(goodsData) !== '{}'"
          :goodsData="goodsData"></Sku>
     <GoodsDetails :goods_details="goodsData.goods_details"></GoodsDetails>
-    <GoodsAction @onClickButton="onClickButton"></GoodsAction>
+    <GoodsAction :cartNUmber="cartNUmber" @onClickButton="onClickButton"></GoodsAction>
   </div>
 </template>
 
@@ -22,6 +23,7 @@ import Sku from './Sku.vue';
 import GoodsDetails from './GoodsDetails.vue';
 import GoodsAction from './GoodsAction.vue';
 import { getGoods } from '@/api/goods';
+import { getCart } from '@/api/cart';
 export default {
   components: {
     Swipe,
@@ -34,11 +36,13 @@ export default {
   data () {
     return {
       isShowSku: false,
-      goodsData: {}
+      goodsData: {},
+      cartNUmber: 0
     }
   },
   created () {
     this.getGoodsData()
+    this.getCartData()
   },
   methods: {
     // 获取数据
@@ -52,11 +56,25 @@ export default {
         console.log(err);
       });
     },
+    // 获取购物车数据
+    getCartData () {
+      const u_id = this.$store.getters.userInfo.u_id
+      getCart(u_id).then(res => {
+        console.log(res);
+        this.cartNUmber = res.data.data.length
+      }).catch(err => {
+        console.log(err);
+      })
+    },
     onCellSku () {
       this.isShowSku = true
     },
     onClickButton (val) {
       this.isShowSku = val
+    },
+    updateShowSku(val){
+      this.isShowSku = val
+      this.getCartData()
     }
   },
 }

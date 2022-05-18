@@ -78,6 +78,7 @@ import Plat from './Plat.vue';
 import { areaCodeToChinese } from '@/utils/areaCode';
 import { getGoods, getSpecification } from '@/api/goods';
 import { getAddress } from '@/api/address';
+import { submitOrders } from '@/api/order';
 export default {
   components: {
     RouterCell,
@@ -116,6 +117,8 @@ export default {
         // }
       ],
       message: '',
+      price: 0,
+      freight: 0,
       priceTotal: 0,
       list: [],
       addressIndex: null,
@@ -138,6 +141,7 @@ export default {
             console.log(result);
             this.shopping.push({
               id: res.data.data.goods_id,
+              cart_id: element.cart_id,
               thumb: res.data.data.goods_avatar,
               title: res.data.data.goods_name,
               specification_id: element.selectedSkuComb.id,
@@ -192,7 +196,7 @@ export default {
       this.$router.push({
         path: '/editaddress',
         query: {
-          id:item.id
+          id: item.id
         }
       })
     },
@@ -209,10 +213,45 @@ export default {
     // 提交订单
     onSubmitOrderConfirm () {
       this.isPopupConfirm = true
-      console.log('创建订单');
+      const data = {
+        u_id: this.$store.getters.userInfo.u_id,
+        goods_amount_tatol: 0,
+        order_amount_tatal: this.priceTotal,
+        order_status: 1,
+        pay_channel: null,
+        coupon_id: null,
+        zipcode: this.list[this.addressIndex].zipcode,
+        consignee: this.list[this.addressIndex].name,
+        telephone: this.list[this.addressIndex].tel,
+        address_region: this.list[this.addressIndex].province + ',' + this.list[this.addressIndex].city + ',' + this.list[this.addressIndex].district,
+        address_detailed: this.list[this.addressIndex].detail,
+        note: this.message,
+        order_freight: this.freight,
+        orderGoods: []
+      }
+      this.shopping.forEach(item => {
+        data.orderGoods.push({
+          cart_id: item.cart_id,
+          goods_id: item.id,
+          goods_avatar: item.thumb,
+          goods_name: item.title,
+          specification_id: item.specification_id,
+          goods_pic: item.price,
+          goods_num: item.num,
+        })
+        data.goods_amount_tatol += (item.price *item.num)
+      })
+      submitOrders(data).then(res => {
+        console.log(res);
+      }).catch(err => {
+        console.log(err);
+      })
     },
     onClosedConfirm () {
       console.log('关闭');
+      this.$router.replace({
+        path: '/order'
+      })
     },
     onChangeRadioPlat (val) {
       console.log(val);

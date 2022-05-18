@@ -142,7 +142,7 @@ export default {
             deleteCart(name).then(res => {
               this.shoppingCart.map((item, index) => {
                 if (item.id == name) {
-                 return this.shoppingCart.splice(index,1)
+                  return this.shoppingCart.splice(index, 1)
                 }
                 return item
               })
@@ -233,6 +233,7 @@ export default {
         this.result.forEach(item2 => {
           if (item.id == item2) {
             data.push({
+              cart_id: item.id,
               goodsId: item.goods_id,
               selectedNum: item.num,
               selectedSkuComb: {
