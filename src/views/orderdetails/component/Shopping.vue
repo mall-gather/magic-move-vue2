@@ -108,14 +108,14 @@ export default {
       this.price = 0
       this.freight = 0
       this.shopping.forEach(item => {
-        this.price += item.price
-        this.freight += item.freight
+        this.price += (item.price * item.num)
+        this.freight = item.freight
       })
     },
     // 小计
     subtotal (price, freight, coupon) {
       this.priceTotal = price + freight - coupon
-      this.$emit('subtotal',this.priceTotal)
+      this.$emit('subtotal', this.priceTotal)
       return this.priceTotal
     }
   },

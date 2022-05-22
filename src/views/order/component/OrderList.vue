@@ -151,6 +151,7 @@ export default {
         u_id: this.$store.getters.userInfo.u_id,
         order_status: this.active
       }
+      this.orderList = []
       getUserOrderList(data).then(res => {
         console.log(res)
         if (res.data.code === 200) {
@@ -185,6 +186,7 @@ export default {
       setTimeout(() => {
         console.log('刷新成功');
         this.isLoading = false;
+        this.getUserOrderListData()
       }, 1000);
     },
     // 点击订单
@@ -205,6 +207,7 @@ export default {
         price += (item.price * item.num)
       })
       this.pay = {
+        order_id: order.order_id,
         name: order.orderGoods.length > 1 ? 'magic商城' : order.orderGoods[0].title,
         time: countdown(order.end_time),
         price: price
@@ -219,6 +222,7 @@ export default {
     // 付款
     onClickPayment () {
       console.log('付款');
+      window.open(`http://localhost:7001/pay/ali?order_id=${this.pay.order_id}&total_amount=${this.pay.price}`,'_self')
     }
   },
 }
@@ -241,7 +245,7 @@ export default {
         display: flex;
         justify-content: space-between;
         align-items: center;
-        >.state{
+        > .state {
           font-size: 16px;
           font-weight: 500;
           color: #ff6d6d;

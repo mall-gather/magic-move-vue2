@@ -22,3 +22,15 @@ export function getUserOrderList(data) {
     }
   })
 }
+
+// 用户查询订单详情
+export function getUserOrder(data) {
+  return request({
+    url: '/api/forward/getuserorder',
+    method: 'get',
+    params: {
+      u_id: data.u_id,
+      order_id: data.order_id
+    }
+  })
+}

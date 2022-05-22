@@ -79,6 +79,8 @@ import { areaCodeToChinese } from '@/utils/areaCode';
 import { getGoods, getSpecification } from '@/api/goods';
 import { getAddress } from '@/api/address';
 import { submitOrders } from '@/api/order';
+import { payMoney } from '@/api/pay';
+import axios from "axios";
 export default {
   components: {
     RouterCell,
@@ -124,6 +126,7 @@ export default {
       addressIndex: null,
       addressId: null,
       time: 30 * 60 * 1000,
+      orderInfo: {}
     }
   },
   created () {
@@ -239,10 +242,11 @@ export default {
           goods_pic: item.price,
           goods_num: item.num,
         })
-        data.goods_amount_tatol += (item.price *item.num)
+        data.goods_amount_tatol += (item.price * item.num)
       })
       submitOrders(data).then(res => {
         console.log(res);
+        this.orderInfo = res.data.data
       }).catch(err => {
         console.log(err);
       })
@@ -259,6 +263,7 @@ export default {
     // 付款
     onClickPayment () {
       console.log('付款');
+      window.open(`http://localhost:7001/pay/ali?order_id=${this.orderInfo.order_id}&total_amount=${this.orderInfo.order_amount_tatal}`,'_self')
     }
   },
 }

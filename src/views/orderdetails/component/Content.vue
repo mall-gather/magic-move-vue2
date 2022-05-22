@@ -1,21 +1,23 @@
 <template>
   <div class="order-details-content">
-    <RouterCell title="交易关闭"
+    <RouterCell :title="orderInfoData.order_status | orderState"
                 :isLink="false">
       <template #label>
         <span>逛逛别的商品，或许有心动的～</span>
       </template>
     </RouterCell>
-    <RouterCell class="address"
-                title="yuzu 10000000000"
+    <RouterCell v-if="JSON.stringify(orderInfoData) !== '{}'"
+                class="address"
+                :title="orderInfoData.consignee +' '+ orderInfoData.telephone"
                 icon="location-o"
                 :isLink="false">
       <template #label>
-        <span>广西</span>
+        <span>{{orderInfoData.address_region | areaCodeConversion}} {{orderInfoData.address_detailed}}</span>
       </template>
     </RouterCell>
-    <Shopping :shopping="shopping"></Shopping>
-    <OrderInfo></OrderInfo>
+    <Shopping v-if="shopping.length"
+              :shopping="shopping"></Shopping>
+    <OrderInfo :orderInfoData="orderInfoData"></OrderInfo>
     <van-button class="service-button"
                 type="primary"
                 @click="onClickService"
@@ -29,6 +31,8 @@ import { Button as VanButton } from 'vant';
 import RouterCell from '@/components/RouterCell/index.vue';
 import Shopping from './Shopping.vue';
 import OrderInfo from './OrderInfo.vue';
+import { areaCodeToChinese } from '@/utils/areaCode';
+import { getUserOrder } from '@/api/order';
 export default {
   components: {
     RouterCell,
@@ -38,29 +42,74 @@ export default {
   },
   data () {
     return {
-      shopping: [
-        {
-          id: 1,
-          thumb: 'https://img01.yzcdn.cn/vant/ipad.jpeg',
-          title: '手机',
-          desc: '12+256',
-          price: 1000.22,
-          freight: 0,
-          num: 1
-        },
-        {
-          id: 2,
-          thumb: 'https://img01.yzcdn.cn/vant/ipad.jpeg',
-          title: '手机',
-          desc: '12+256',
-          price: 1000.22,
-          freight: 0,
-          num: 1
-        }
-      ],
+      orderInfoData: {},
+      shopping: [],
     }
   },
+  filters: {
+    areaCodeConversion: function (value) {
+      const code = value.split(',')
+      return areaCodeToChinese(code);
+    },
+    orderState: function (value) {
+      switch (value) {
+        case 1:
+          return '待付款'
+        case 2:
+          return '已付款'
+        case 3:
+          return '已发货'
+        case 4:
+          return '已完成'
+        case -1:
+          return '交易已关闭'
+      }
+    },
+    orderStateDescribe: function (value) {
+      switch (value) {
+        case 1:
+          return '超时订单将自动关闭'
+        case 2:
+          return '订单已付款，等待发货'
+        case 3:
+          return '订单已发货，等待签收'
+        case 4:
+          return '订单已完成'
+        case -1:
+          return '逛逛别的商品，或许有心动的～'
+      }
+    },
+  },
+  created () {
+    this.getUserOrderData()
+  },
   methods: {
+    // 获取数据
+    getUserOrderData () {
+      const data = {
+        u_id: this.$store.getters.userInfo.u_id,
+        order_id: this.$route.query.id
+      }
+      getUserOrder(data).then(res => {
+        console.log(res);
+        if (res.data.code === 200) {
+          this.orderInfoData = res.data.data
+          res.data.data.orderGoods.forEach(element => {
+            this.shopping.push({
+              id: element.goods_id,
+              thumb: element.goods_avatar,
+              title: element.goods_name,
+              desc: element.specification.specification_value1 + ' ' + element.specification.specification_value2,
+              price: element.goods_pic,
+              freight: res.data.data.order_freight,
+              num: element.goods_num
+            })
+          });
+        }
+      }).catch(err => {
+        console.log(err);
+      })
+    },
     onClickService () {
       console.log('联系客服');
     }
